@@ -1,0 +1,10 @@
+#!/bin/sh
+'''exec' "/Users/rankailai/Documents/UTS_Year2Semester1/32516 Internet Programming/Assignment/shopping-cart-assignment/backend/venv/bin/python3.11" "$0" "$@"
+' '''
+# -*- coding: utf-8 -*-
+import re
+import sys
+from uvicorn.main import main
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())
