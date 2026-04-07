@@ -134,6 +134,11 @@ button:hover {
   opacity: 0.9;
 }
 
+.empty-cart {
+  color: #666;
+  line-height: 1.6;
+}
+
 .cart-list {
   display: flex;
   flex-direction: column;

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   getProducts,
   getCartItems,
@@ -18,12 +18,18 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const messageTimerRef = useRef(null);
 
   const showMessage = (text) => {
-  setMessage(text);
-  setTimeout(() => {
-    setMessage("");
-  }, 2000);
+    setMessage(text);
+
+    if (messageTimerRef.current) {
+      clearTimeout(messageTimerRef.current);
+    }
+
+    messageTimerRef.current = setTimeout(() => {
+      setMessage("");
+    }, 2000);
   };
 
   const loadData = async () => {
@@ -45,6 +51,12 @@ function App() {
 
   useEffect(() => {
     loadData();
+
+    return () => {
+      if (messageTimerRef.current) {
+        clearTimeout(messageTimerRef.current);
+      }
+    };
   }, []);
 
   const categories = useMemo(() => {
@@ -52,16 +64,18 @@ function App() {
     return ["All", ...uniqueCategories];
   }, [products]);
 
- const filteredProducts = products.filter((p) => {
-  const matchCategory =
-    selectedCategory === "All" || p.category === selectedCategory;
+  const filteredProducts = useMemo(() => {
+    return products.filter((p) => {
+      const matchCategory =
+        selectedCategory === "All" || p.category === selectedCategory;
 
-  const matchSearch = p.name
-    .toLowerCase()
-    .includes(searchTerm.toLowerCase());
+      const matchSearch = p.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
 
-  return matchCategory && matchSearch;
-});
+      return matchCategory && matchSearch;
+    });
+  }, [products, selectedCategory, searchTerm]);
 
   const totalPrice = cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
@@ -70,22 +84,57 @@ function App() {
 
   const handleAddToCart = async (productId) => {
     try {
+      const product = products.find((p) => p.id === productId);
+      const cartItem = cartItems.find((item) => item.product.id === productId);
+
+      if (!product) {
+        showMessage("Product not found.");
+        return;
+      }
+
+      const currentQuantity = cartItem ? cartItem.quantity : 0;
+
+      if (currentQuantity >= product.stock) {
+        showMessage("Cannot add more. Stock limit reached.");
+        return;
+      }
+
       await addToCart(productId, 1);
       await loadData();
       showMessage("Item added to cart.");
     } catch (error) {
       console.error("Failed to add item:", error);
-      setMessage("Failed to add item.");
+      showMessage("Failed to add item.");
     }
   };
 
   const handleIncrease = async (cartItemId, currentQuantity) => {
     try {
+      const cartItem = cartItems.find((item) => item.id === cartItemId);
+
+      if (!cartItem) {
+        showMessage("Cart item not found.");
+        return;
+      }
+
+      const product = products.find((p) => p.id === cartItem.product.id);
+
+      if (!product) {
+        showMessage("Product not found.");
+        return;
+      }
+
+      if (currentQuantity >= product.stock) {
+        showMessage("Cannot add more. Stock limit reached.");
+        return;
+      }
+
       await updateCartItem(cartItemId, currentQuantity + 1);
       await loadData();
+      showMessage("Quantity updated.");
     } catch (error) {
       console.error("Failed to update quantity:", error);
-      setMessage("Failed to update quantity.");
+      showMessage("Failed to update quantity.");
     }
   };
 
@@ -93,13 +142,16 @@ function App() {
     try {
       if (currentQuantity === 1) {
         await deleteCartItem(cartItemId);
+        await loadData();
+        showMessage("Item removed from cart.");
       } else {
         await updateCartItem(cartItemId, currentQuantity - 1);
+        await loadData();
+        showMessage("Quantity updated.");
       }
-      await loadData();
     } catch (error) {
       console.error("Failed to update quantity:", error);
-      setMessage("Failed to update quantity.");
+      showMessage("Failed to update quantity.");
     }
   };
 
@@ -107,10 +159,10 @@ function App() {
     try {
       await deleteCartItem(cartItemId);
       await loadData();
-      setMessage("Item removed from cart.");
+      showMessage("Item removed from cart.");
     } catch (error) {
       console.error("Failed to delete item:", error);
-      setMessage("Failed to delete item.");
+      showMessage("Failed to delete item.");
     }
   };
 
@@ -122,14 +174,14 @@ function App() {
       </header>
 
       <div className="search-bar">
-      <input
-        type="text"
-       placeholder="Search products..."
-       value={searchTerm}
-       onChange={(e) => setSearchTerm(e.target.value)}
-      />
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
-      
+
       <FilterBar
         categories={categories}
         selectedCategory={selectedCategory}

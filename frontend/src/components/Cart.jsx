@@ -6,7 +6,10 @@ function Cart({ cartItems, totalPrice, onIncrease, onDecrease, onDelete }) {
       <h2>Shopping Cart</h2>
 
       {cartItems.length === 0 ? (
-        <p>Your cart is empty.</p>
+        <div className="empty-cart">
+          <p>Your cart is empty.</p>
+          <p>Add some products to see them here.</p>
+        </div>
       ) : (
         <>
           <div className="cart-list">
