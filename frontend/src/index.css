@@ -35,6 +35,18 @@ body {
   margin-bottom: 20px;
 }
 
+.search-bar {
+  margin-bottom: 16px;
+}
+
+.search-bar input {
+  width: 100%;
+  max-width: 320px;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
 .filter-bar select {
   padding: 8px 12px;
 }
@@ -113,6 +125,11 @@ button {
   transition: 0.2s;
 }
 
+.qty-button {
+  min-width: 36px;
+  padding: 8px 10px;
+}
+
 button:hover {
   opacity: 0.9;
 }
@@ -148,6 +165,12 @@ button:hover {
 
 .cart-summary {
   margin-top: 20px;
+}
+
+.cart-summary h3 {
+  color: #2563eb;
+  font-size: 22px;
+  margin-bottom: 12px;
 }
 
 @media (max-width: 900px) {

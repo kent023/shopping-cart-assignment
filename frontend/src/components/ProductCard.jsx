@@ -1,7 +1,11 @@
 function ProductCard({ product, onAddToCart }) {
   return (
     <div className="product-card">
-      <img src={product.image_url} alt={product.name} className="product-image" />
+      <img
+  src={product.image_url || "https://picsum.photos/200"}
+  alt={product.name}
+  className="product-image"
+/>
       <h3>{product.name}</h3>
       <p>{product.description}</p>
       <p className="category">{product.category}</p>

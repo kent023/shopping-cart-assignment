@@ -17,6 +17,14 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const showMessage = (text) => {
+  setMessage(text);
+  setTimeout(() => {
+    setMessage("");
+  }, 2000);
+  };
 
   const loadData = async () => {
     try {
@@ -29,7 +37,7 @@ function App() {
       setCartItems(cartRes.data);
     } catch (error) {
       console.error("Failed to load data:", error);
-      setMessage("Failed to load data.");
+      showMessage("Failed to load data.");
     } finally {
       setLoading(false);
     }
@@ -44,10 +52,16 @@ function App() {
     return ["All", ...uniqueCategories];
   }, [products]);
 
-  const filteredProducts =
-    selectedCategory === "All"
-      ? products
-      : products.filter((p) => p.category === selectedCategory);
+ const filteredProducts = products.filter((p) => {
+  const matchCategory =
+    selectedCategory === "All" || p.category === selectedCategory;
+
+  const matchSearch = p.name
+    .toLowerCase()
+    .includes(searchTerm.toLowerCase());
+
+  return matchCategory && matchSearch;
+});
 
   const totalPrice = cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
@@ -58,7 +72,7 @@ function App() {
     try {
       await addToCart(productId, 1);
       await loadData();
-      setMessage("Item added to cart.");
+      showMessage("Item added to cart.");
     } catch (error) {
       console.error("Failed to add item:", error);
       setMessage("Failed to add item.");
@@ -107,6 +121,15 @@ function App() {
         <p>React + FastAPI + SQLite single-page shopping cart application</p>
       </header>
 
+      <div className="search-bar">
+      <input
+        type="text"
+       placeholder="Search products..."
+       value={searchTerm}
+       onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      </div>
+      
       <FilterBar
         categories={categories}
         selectedCategory={selectedCategory}
