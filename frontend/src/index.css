@@ -172,12 +172,6 @@ button:hover {
   margin-top: 20px;
 }
 
-.cart-summary h3 {
-  color: #2563eb;
-  font-size: 22px;
-  margin-bottom: 12px;
-}
-
 @media (max-width: 900px) {
   .main-layout {
     grid-template-columns: 1fr;
