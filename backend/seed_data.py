@@ -14,7 +14,7 @@ if existing_products == 0:
             "description": "A smooth and responsive wireless mouse.",
             "price": 25.99,
             "category": "Electronics",
-            "image_url": "https://picsum.photos/200",
+            "image_url": "/images/mouse.jpg",
             "stock": 10
         },
         {
@@ -22,7 +22,7 @@ if existing_products == 0:
             "description": "A durable keyboard with tactile feedback.",
             "price": 79.99,
             "category": "Electronics",
-            "image_url": "https://picsum.photos/200",
+            "image_url": "/images/keyboard.jpg",
             "stock": 8
         },
         {
@@ -30,23 +30,23 @@ if existing_products == 0:
             "description": "Fast charging USB-C cable.",
             "price": 12.50,
             "category": "Accessories",
-            "image_url": "https://picsum.photos/200",
+            "image_url": "/images/cable.jpg",
             "stock": 20
         },
         {
-            "name": "Laptop Stand",
-            "description": "Ergonomic aluminum laptop stand.",
-            "price": 34.90,
-            "category": "Accessories",
-            "image_url": "https://picsum.photos/200",
+            "name": "Laptop",
+            "description": "High-performance laptop for work and play.",
+            "price": 999.99,
+            "category": "Electronics",
+            "image_url": "/images/laptop.jpg",
             "stock": 15
         },
         {
             "name": "Phone Case",
             "description": "Shockproof phone case.",
-            "price": 18.75,
+            "price": 275.75,
             "category": "Accessories",
-            "image_url": "https://picsum.photos/200",
+            "image_url": "/images/phone.jpg",
             "stock": 25
         }
     ]

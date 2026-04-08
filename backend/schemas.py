@@ -10,6 +10,13 @@ class ProductBase(BaseModel):
     image_url: Optional[str] = None
     stock: int
 
+class ProductCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+    price: float
+    category: str
+    image_url: Optional[str] = None
+    stock: int
 
 class ProductResponse(ProductBase):
     id: int
